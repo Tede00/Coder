@@ -1,11 +1,39 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 
-const PokeCard = ({pokedata}) => {
+const PokeCard = ({poke}) => {
+  const [pokeData, setPokeData] =useState()
+  const [types,setTypes]=useState([])
+
+  const getPokeById = async() =>{
+    try{
+      const res=await fetch(poke.url)
+      const data=await res.json()
+      setPokeData(data)
+      setTypes(data.types)
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+  useEffect(()=>{
+    getPokeById()
+  },[])
+
+
   return (
-    <div>
-        <img className='fotopoke' src={pokedata?.url} alt="pokemon" />
-        <h3>{pokedata.name}</h3>
-    </div>
+    <>
+    {
+      pokeData&&
+      <div>
+          {types.some((type)=>type.type.name==='fire') &&
+            <>
+              <img className='fotopoke' src={pokeData.sprites.front_default} alt="pokemon" />
+              <h3>{poke.name}</h3>
+            </>
+          } 
+      </div>
+      }  
+    </>
   )
 }
 
